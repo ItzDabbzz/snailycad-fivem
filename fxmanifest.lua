@@ -7,4 +7,3 @@ version '1.0.0'
 
 client_script '/client/client.js'
 server_script '/server/server.js'
-server_export 'cadfetch'

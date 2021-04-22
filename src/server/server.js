@@ -1,10 +1,11 @@
 /// <reference path="../../node_modules/@citizenfx/server/natives_server.d.ts" />
+let cadfetch = require('./cadfetch.js')
 let wraithLastPlates = { scanned: {}, locked: {} };
 // eslint-disable-next-line no-unused-vars
 
 
 onNet("sn:towCallUpdate", ({ street, name, description }) => {
-  exports['snailycad-fivem']['cadfetch']("/api/calls/tow", {
+  cadfetch("/api/calls/tow", {
     caller: name,
     location: street,
     description: description.join(" "),
@@ -16,7 +17,7 @@ onNet("sn:towCallUpdate", ({ street, name, description }) => {
 onNet("sn:taxiCallUpdate", ({ street, name, description }) => {
   console.log(street);
 
-  exports['snailycad-fivem']['cadfetch']("/api/calls/taxi", {
+  cadfetch("/api/calls/taxi", {
     caller: name,
     location: street,
     description: description.join(" "),
@@ -27,7 +28,7 @@ onNet("sn:taxiCallUpdate", ({ street, name, description }) => {
 
 onNet("sn:911CallUpdate", ({ street, name, description }) => {
   console.log(`sn:911CallUpdate | ${street} | ${name} | ${description}`);
-  exports['snailycad-fivem']['cadfetch']("/api/calls/911", {
+  cadfetch("/api/calls/911", {
     caller: name,
     location: street,
     description: description.join(" "),
@@ -37,7 +38,7 @@ onNet("sn:911CallUpdate", ({ street, name, description }) => {
 });
 
 onNet("sn:PlateSearch", ({ plate }) => {
-  exports['snailycad-fivem']['cadfetch']("/api/search/plate", {
+  cadfetch("/api/search/plate", {
     plate: plate
   }).catch(console.error);
 
@@ -45,7 +46,7 @@ onNet("sn:PlateSearch", ({ plate }) => {
 });
 
 onNet("sn:NameSearch", ({ name }) => {
-  exports['snailycad-fivem']['cadfetch']("/api/search/name", {
+  cadfetch("/api/search/name", {
     name: name
   }).catch(console.error);
 

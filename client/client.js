@@ -1,3 +1,5 @@
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
 /// <reference path="../../node_modules/@citizenfx/client/natives_universal.d.ts" />
 
 
@@ -65,7 +67,7 @@ onNet("sn:911Call", ({ name, description }) => {
   const streetName2 = GetStreetNameFromHashKey(lastStreet[1]);
   const streetNameCorner = `${streetName1} & ${streetName2}`
   let final = streetName2 ? streetName1 : streetNameCorner
-  console.log(`onNet ${x} ${y} ${z} | ${lastStreet} | ${final} `)
+  console.log(`onNet ${x} ${y} ${z} | ${lastStreet} | ${streetName1} | ${streetName2}`)
   setImmediate(() => {
     emitNet("sn:911CallUpdate", { street: streetName1, name: name, description: description });
   });
@@ -93,3 +95,6 @@ function createNotification(picture, icon, message, title) {
   AddTextComponentString(message);
   SetNotificationMessage(picture, picture, true, icon, title);
 }
+
+/******/ })()
+;

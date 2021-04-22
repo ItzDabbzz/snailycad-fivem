@@ -1,6 +1,6 @@
 const axios = require("axios").default;
 
-exports('cadfetch', async function (path, data) {
+async function cadfetch(path, data) {
   const url = GetConvar("snailycad_url");
   console.log(data);
   return await axios({
@@ -8,4 +8,6 @@ exports('cadfetch', async function (path, data) {
     data,
     url: `${url}${path}`,
   });
-});
+};
+
+module.exports = cadfetch;
