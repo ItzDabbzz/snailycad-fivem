@@ -3790,7 +3790,6 @@ const axios = __webpack_require__(669).default;
 
 async function cadfetch(path, data) {
   const url = GetConvar("snailycad_url");
-  console.log(data);
   return await axios({
     method: "POST",
     data,
@@ -3910,7 +3909,7 @@ let wraithLastPlates = { scanned: {}, locked: {} };
 // eslint-disable-next-line no-unused-vars
 
 
-onNet("sn:towCallUpdate", ({ street, name, description }) => {
+onNet("sn:towCallUpdate", ( street, name, description ) => {
   cadfetch("/api/calls/tow", {
     caller: name,
     location: street,
@@ -3920,7 +3919,7 @@ onNet("sn:towCallUpdate", ({ street, name, description }) => {
   CancelEvent();
 });
 
-onNet("sn:taxiCallUpdate", ({ street, name, description }) => {
+onNet("sn:taxiCallUpdate", ( street, name, description ) => {
   console.log(street);
 
   cadfetch("/api/calls/taxi", {
@@ -3932,7 +3931,7 @@ onNet("sn:taxiCallUpdate", ({ street, name, description }) => {
   CancelEvent();
 });
 
-onNet("sn:911CallUpdate", ({ street, name, description }) => {
+onNet("sn:911CallUpdate", (street, name, description) => {
   console.log(`sn:911CallUpdate | ${street} | ${name} | ${description}`);
   cadfetch("/api/calls/911", {
     caller: name,
@@ -3943,7 +3942,7 @@ onNet("sn:911CallUpdate", ({ street, name, description }) => {
   CancelEvent();
 });
 
-onNet("sn:PlateSearch", ({ plate }) => {
+onNet("sn:PlateSearch", ( plate ) => {
   cadfetch("/api/search/plate", {
     plate: plate
   }).catch(console.error);
@@ -3951,7 +3950,7 @@ onNet("sn:PlateSearch", ({ plate }) => {
   CancelEvent();
 });
 
-onNet("sn:NameSearch", ({ name }) => {
+onNet("sn:NameSearch", ( name ) => {
   cadfetch("/api/search/name", {
     name: name
   }).catch(console.error);
@@ -3959,12 +3958,12 @@ onNet("sn:NameSearch", ({ name }) => {
   CancelEvent();
 });
 
-onNet("wk:onPlateScanned", ({ cam, plate, index }) => {
+onNet("wk:onPlateScanned", ( cam, plate, index ) => {
   console.log(`${GetPlayerName(source)} Scanned Plate:\n#: ${plate}\nCam: ${cam}\nIndex: ${index}`);
   
 });
 
-onNet("wk:onPlateLocked", ({ cam, plate, index }) => {
+onNet("wk:onPlateLocked", ( cam, plate, index ) => {
   console.log(`${GetPlayerName(source)} Scanned Plate:\n#: ${plate}\nCam: ${cam}\nIndex: ${index}`);
   let id = GetPlayerIdentifier(source);
   let camName;

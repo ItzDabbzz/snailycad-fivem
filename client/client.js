@@ -4,11 +4,18 @@ var __webpack_exports__ = {};
 
 
 onNet("sn:towCall", ({ name, description }) => {
-  const lastStreet = GetStreetNameAtCoord(x, y, z);
-  const lastStreetName = GetStreetNameFromHashKey(lastStreet);
+  console.log(`onNet sn:towCall ${name} | ${description}`)
+  const [x, y, z] = GetEntityCoords(GetPlayerPed(-1));
+
+  const lastStreet = GetStreetNameAtCoord(x, y, z, 0, 0);
+  const streetName1 = GetStreetNameFromHashKey(lastStreet[0]);
+  const streetName2 = GetStreetNameFromHashKey(lastStreet[1]);
+  const streetNameCorner = `${streetName1} & ${streetName2}`
+  let final = streetName2 ? streetName1 : streetNameCorner
+  console.log(`onNet sn:towCall ${x} ${y} ${z} | ${lastStreet} | ${final} `)
 
   setImmediate(() => {
-    emitNet("sn:towCallUpdate", { street: lastStreetName, name, description });
+    emitNet("sn:towCallUpdate", { final, name, description });
   });
 
   createNotification(
@@ -19,11 +26,10 @@ onNet("sn:towCall", ({ name, description }) => {
   );
 });
 
-RegisterCommand("calltow", (source, args) => {
+RegisterCommand("calltow", (source, description) => {
   CancelEvent();
 
   const name = GetPlayerName(source);
-  const description = args;
 
   setImmediate(() => {
     emit("sn:towCall", -1, { source, name, description });
@@ -31,12 +37,18 @@ RegisterCommand("calltow", (source, args) => {
 });
 
 onNet("sn:taxiCall", ({ name, description }) => {
-  const lastStreet = GetStreetNameAtCoord(x, y, z);
-  const lastStreetName = GetStreetNameFromHashKey(lastStreet);
-  console.log("lastStreetName", lastStreetName);
+  console.log(`onNet sn:taxiCall ${name} | ${description}`)
+  const [x, y, z] = GetEntityCoords(GetPlayerPed(-1));
+
+  const lastStreet = GetStreetNameAtCoord(x, y, z, 0, 0);
+  const streetName1 = GetStreetNameFromHashKey(lastStreet[0]);
+  const streetName2 = GetStreetNameFromHashKey(lastStreet[1]);
+  const streetNameCorner = `${streetName1} & ${streetName2}`
+  let final = streetName2 ? streetName1 : streetNameCorner
+  console.log(`onNet sn:taxiCall ${x} ${y} ${z} | ${lastStreet} | ${final} `)
 
   setImmediate(() => {
-    emitNet("sn:taxiCallUpdate", { street: lastStreetName, name, description });
+    emitNet("sn:taxiCallUpdate",  final, name, description );
   });
 
   createNotification(
@@ -47,14 +59,13 @@ onNet("sn:taxiCall", ({ name, description }) => {
   );
 });
 
-RegisterCommand("calltaxi", (source, args) => {
+RegisterCommand("calltaxi", (source, description) => {
   CancelEvent();
 
   const name = GetPlayerName(source);
-  const description = args;
 
   setImmediate(() => {
-    emit("sn:taxiCall", { source, name, description });
+    emit("sn:taxiCall", source, name, description);
   });
 });
 
@@ -67,9 +78,9 @@ onNet("sn:911Call", ({ name, description }) => {
   const streetName2 = GetStreetNameFromHashKey(lastStreet[1]);
   const streetNameCorner = `${streetName1} & ${streetName2}`
   let final = streetName2 ? streetName1 : streetNameCorner
-  console.log(`onNet ${x} ${y} ${z} | ${lastStreet} | ${streetName1} | ${streetName2}`)
+  console.log(`onNet sn:911Call ${x} ${y} ${z} | ${lastStreet} | ${final} `)
   setImmediate(() => {
-    emitNet("sn:911CallUpdate", { street: streetName1, name: name, description: description });
+    emitNet("sn:911CallUpdate", final, name, description );
   });
 
   createNotification(
