@@ -4,68 +4,88 @@ let wraithLastPlates = { scanned: {}, locked: {} };
 // eslint-disable-next-line no-unused-vars
 
 
-onNet("sn:towCallUpdate", ( street, name, description ) => {
+onNet("sn:towCallUpdate", ({ street, name, description }) => {
   cadfetch("/api/calls/tow", {
     caller: name,
     location: street,
-    description: description.join(" "),
+    description: description,
   }).catch(console.error);
 
   CancelEvent();
 });
 
-onNet("sn:taxiCallUpdate", ( street, name, description ) => {
+
+RegisterCommand("calltow", (source, args) => {
+  CancelEvent();
+
+  const name = GetPlayerName(source);
+  let description = args.join(' ')
+
+  setImmediate(() => {
+    emitNet("sn:towCall", -1, { name, description });
+  });
+});
+
+
+onNet("sn:taxiCallUpdate", ({ street, name, description }) => {
   console.log(street);
 
   cadfetch("/api/calls/taxi", {
     caller: name,
     location: street,
-    description: description.join(" "),
+    description: description,
   }).catch(console.error);
 
   CancelEvent();
 });
 
-onNet("sn:911CallUpdate", (street, name, description) => {
+RegisterCommand("calltaxi", (source, args) => {
+  CancelEvent();
+
+  const name = GetPlayerName(source);
+  let description = args.join(' ')
+
+  setImmediate(() => {
+    emitNet("sn:taxiCall", -1, { name, description });
+  });
+});
+
+onNet("sn:911CallUpdate", ({ street, name, description }) => {
   console.log(`sn:911CallUpdate | ${street} | ${name} | ${description}`);
   cadfetch("/api/calls/911", {
     caller: name,
     location: street,
-    description: description.join(" "),
+    description: description,
   }).catch(console.error);
 
   CancelEvent();
 });
 
-onNet("sn:PlateSearch", ( plate ) => {
-  cadfetch("/api/search/plate", {
-    plate: plate
-  }).catch(console.error);
+RegisterCommand("call911", (source, args) => {
+  const name = GetPlayerName(source);
+  let description = args.join(' ')
 
+  console.log(`call911 ${source} | ${name} | ${description}`)
+  
+  setImmediate(() => {
+    emitNet("sn:911Call", -1, { name, description });
+  });
   CancelEvent();
 });
 
-onNet("sn:NameSearch", ( name ) => {
-  cadfetch("/api/search/name", {
-    name: name
-  }).catch(console.error);
-
-  CancelEvent();
-});
-
-onNet("wk:onPlateScanned", ( cam, plate, index ) => {
+onNet("wk:onPlateScanned", ({ cam, plate, index }) => {
   console.log(`${GetPlayerName(source)} Scanned Plate:\n#: ${plate}\nCam: ${cam}\nIndex: ${index}`);
   
 });
 
-onNet("wk:onPlateLocked", ( cam, plate, index ) => {
+onNet("wk:onPlateLocked", async ({ cam, plate, index }) => {
   console.log(`${GetPlayerName(source)} Scanned Plate:\n#: ${plate}\nCam: ${cam}\nIndex: ${index}`);
   let id = GetPlayerIdentifier(source);
   let camName;
   let reg = false;
   plate = plate.match("^%s*(.-)%s*$");
   wraithLastPlates.locked = { cam: cam, plate: plate, index: index, vehicle: cam.vehicle };
-  let cadPlate = cadfetch("/api/search/plate", {
+  let cadPlate = await cadfetch("/api/search/plate", {
     plate: plate,
   }).catch(console.error);
   
